@@ -1,0 +1,19 @@
+version: '3.6'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=s3cr3t
+      - POSTGRES_USER=user
+      - POSTGRES_DB=database
+
+  app:
+    build:
+      context: .
+    restart: always
+    command: gunicorn --chdir /tmp/example --bind 0.0.0.0:8888 --workers 1 example.wsgi:application --reload --timeout 9999
+    depends_on:
+      - db
